@@ -8,7 +8,7 @@
   "margin-right": 6,
   "modules-left": ["wlr/taskbar", "temperature", "cpu", "memory", "disk", "hyprland/window"],
   "modules-center": [ "hyprland/workspaces"],
-  "modules-right": ["custom/update","pulseaudio", "bluetooth", "network", "clock","custom/power"],
+  "modules-right": ["custom/update","pulseaudio", "bluetooth", "network", "clock", "tray", "custom/power"],
 
   // Left modules
   "wlr/taskbar": {
@@ -68,8 +68,8 @@
         "urgent": ""   // Font Awesome urgent icon
     },
     "on-click": "activate",
-    "on-scroll-up": "hyprctl dispatch workspace e+1",
-    "on-scroll-down": "hyprctl dispatch workspace e-1"
+    "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e+1\"})'",
+    "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e-1\"})'"
 },
   // Right modules
 "custom/update": {
@@ -86,7 +86,7 @@
     "format-icons": {
       "default": ["", ""]
     },
-    "on-click": "pwvucontrol",
+    "on-click": "pavucontrol",
     "scroll-step": 5
   },
   "bluetooth": {
@@ -114,7 +114,12 @@
   "format": "⏻",
   "tooltip": "Power Menu",
   "on-click": "~/.config/waybar/scripts/power-menu.sh"
-}
+},
+  "tray": {
+    "icon-size": 16,
+    "spacing": 6,
+    "show-passive-items": true
+  }
 
 
 }

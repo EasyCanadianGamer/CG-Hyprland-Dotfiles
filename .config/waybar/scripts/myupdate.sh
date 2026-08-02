@@ -5,10 +5,10 @@ aur_updates=$(yay -Qum 2>/dev/null | wc -l)
 total_updates=$((pacman_updates + aur_updates))
 
 # Determine notification message
-if [ "$total_updates" -gt 0 ]; then
-    notify-send -u normal -i system-software-update "System Updates Available" \
-        "Pacman: $pacman_updates\nAUR: $aur_updates\nClick the update icon to update."
-fi
+#if [ "$total_updates" -gt 0 ]; then
+#    notify-send -u normal -i system-software-update "System Updates Available" \
+#        "Pacman: $pacman_updates\nAUR: $aur_updates\nClick the update icon to update."
+#fi
 
 # Set Waybar class based on update count
 if [ "$total_updates" -eq 0 ]; then

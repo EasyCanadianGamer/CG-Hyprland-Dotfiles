@@ -25,12 +25,21 @@ declare -A SINKS=(
     ["system_sink"]="System"
 )
 
-# Validate output sink exists
-if ! pactl list sinks short | awk '{print $2}' | grep -qx "$OUTPUT_SINK"; then
-    echo "WARNING: OUTPUT_SINK '$OUTPUT_SINK' not found, falling back to default"
-    OUTPUT_SINK=$(pactl info | grep "Default Sink" | awk '{print $3}')
-    echo "  Using: $OUTPUT_SINK"
-fi
+# Wait for PipeWire AND the hardware output sink to be enumerated (up to 30s).
+# PipeWire's socket opens before WirePlumber finishes enumerating hardware sinks,
+# so we must wait for OUTPUT_SINK specifically — not just for pactl to respond.
+TIMEOUT=30
+echo "Waiting for audio hardware to be ready..."
+for i in $(seq 1 $TIMEOUT); do
+    pactl list sinks short 2>/dev/null | awk '{print $2}' | grep -qx "$OUTPUT_SINK" && break
+    if [ "$i" -eq "$TIMEOUT" ]; then
+        echo "WARNING: '$OUTPUT_SINK' not found after ${TIMEOUT}s, falling back to default"
+        OUTPUT_SINK=$(pactl info 2>/dev/null | grep "Default Sink" | awk '{print $3}')
+        echo "  Using: $OUTPUT_SINK"
+    fi
+    sleep 1
+done
+echo "Audio ready (took ${i}s)"
 
 create_sink() {
     local name="$1"
@@ -47,9 +56,18 @@ create_sink() {
 
 create_loopback() {
     local name="$1"
-    if pactl list modules short | grep -q "module-loopback.*source=${name}.monitor"; then
+    local existing
+    existing=$(pactl list modules short | grep "module-loopback" | grep "source=${name}.monitor" || true)
+    if echo "$existing" | grep -q "sink=${OUTPUT_SINK}"; then
         echo "  [skip] loopback for '${name}' already exists"
     else
+        # Remove stale loopback if it exists but points to the wrong sink
+        if [ -n "$existing" ]; then
+            local mod_id
+            mod_id=$(echo "$existing" | awk '{print $1}')
+            echo "  [fix]  removing stale loopback for '${name}' (wrong sink)"
+            pactl unload-module "$mod_id"
+        fi
         pactl load-module module-loopback \
             source="${name}.monitor" \
             sink="$OUTPUT_SINK" \
