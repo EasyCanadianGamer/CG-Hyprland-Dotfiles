@@ -72,7 +72,7 @@ fi
 # ── Packages ───────────────────────────────────────────────────────────────────
 header "Package Installation"
 
-PACMAN_PKGS=(awww cava kitty waybar rofi dunst hyprland wayland pavucontrol ttf-jetbrains-mono-nerd ttf-font-awesome hyprpolkitagent )
+PACMAN_PKGS=(awww cava kitty waybar rofi dunst hyprland wayland pavucontrol neovim ttf-jetbrains-mono-nerd ttf-font-awesome hyprpolkitagent )
 AUR_PKGS=(wlogout-git termsonic )
 
 if confirm "Install required packages?"; then
@@ -153,8 +153,8 @@ awww img "$wall" --transition-type any --transition-fps 60 --transition-duration
 EOF
     chmod +x "$WALL_SCRIPT"
     success "Wallpaper startup script written to $WALL_SCRIPT"
-    info "Add this to hyprland.conf exec-once if not already present:"
-    echo -e "    ${BLUE}exec-once = ~/.config/hypr/scripts/set-wallpaper.sh${RESET}"
+    info "Hyprland uses its native Lua config (hyprland.lua), not hyprland.conf."
+    info "set-wallpaper.sh is already invoked there via hl.on(\"hyprland.start\", ...) — no manual step needed."
 else
     warn "No wallpaper found at $DEFAULT_WALLPAPER — skipping."
 fi
