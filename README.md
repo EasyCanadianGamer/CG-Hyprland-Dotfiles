@@ -19,7 +19,8 @@ My riced Hyprland + Arch Linux configuration.
 | `cava` | Audio visualizer |
 | `wlogout` | a logout screen for wayland |
 | `Termsonic` | a TUI for any sonic api music servers|
-| 'hyprpolkitagent'|a polkit agent for hyprland |
+| `nvim` | A tui text editor with a lazyvim plugins|
+| `hyprpolkitagent`|a polkit agent for hyprland |
 
 ### Themes
 
@@ -39,8 +40,8 @@ Each theme includes a wallpaper, waybar style, and Hyprland border colors.
 ### Automatic (recommended)
 
 ```bash
-git clone https://github.com/EasyCanadianGamer/DOTFILES.git
-cd DOTFILES
+git clone https://github.com/EasyCanadianGamer/CG-Hyprland-Dotfiles.git
+cd CG-Hyprland-Dotfiles
 ./install.sh
 ```
 

@@ -37,7 +37,7 @@ confirm() {
 # ── Banner ─────────────────────────────────────────────────────────────────────
 echo -e "${BOLD}${BLUE}"
 echo "  ┌─────────────────────────────────────────┐"
-echo "  │     Hyprland Dotfiles Installer          │"
+echo "  │    CG Hyprland Dotfiles Installer          │"
 echo "  └─────────────────────────────────────────┘"
 echo -e "${RESET}"
 
