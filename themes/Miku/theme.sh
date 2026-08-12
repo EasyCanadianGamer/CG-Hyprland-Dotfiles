@@ -2,7 +2,7 @@
 
 
 # Modify Hyprland borders directly (optional live reload if you want)
-sed -i '/col.active_border/c\col.active_border = rgba(b6fff6bd) rgba(3bd6c6d9) 45deg' ~/.config/hypr/hyprland.conf
+sed -i -E 's/(active_border = \{ colors = \{ )"[^"]+", "[^"]+"/\1"rgba(b6fff6bd)", "rgba(3bd6c6d9)"/' ~/.config/hypr/hyprland.lua
 
 # Restart Hyprland to apply border changes if needed (optional):
 hyprctl reload

@@ -7,6 +7,7 @@ CONFIG_SRC="./.config"
 CONFIG_DEST="$HOME/.config"
 THEMES_SRC="./themes"
 THEMES_DEST="$HOME/.local/share/themes"
+BACKUP_DIR="$HOME/dotfiles_backup/$(date +%Y%m%d-%H%M%S)"
 
 # ── Colors ─────────────────────────────────────────────────────────────────────
 RED="\e[31m"
@@ -34,6 +35,23 @@ confirm() {
     done
 }
 
+# Back up only the files under $dest that a copy from $src would overwrite,
+# preserving their relative paths under $BACKUP_DIR/$subdir.
+backup_changed_files() {
+    local src="$1" dest="$2" subdir="$3"
+    [ -d "$dest" ] || return 0
+    local rel found=0
+    while IFS= read -r -d '' rel; do
+        rel="${rel#./}"
+        if [ -e "$dest/$rel" ]; then
+            mkdir -p "$BACKUP_DIR/$subdir/$(dirname "$rel")"
+            cp -a "$dest/$rel" "$BACKUP_DIR/$subdir/$rel"
+            found=1
+        fi
+    done < <(cd "$src" && find . -type f -print0)
+    [ "$found" -eq 1 ] && info "Backed up existing $subdir files to $BACKUP_DIR/$subdir"
+}
+
 # ── Banner ─────────────────────────────────────────────────────────────────────
 echo -e "${BOLD}${BLUE}"
 echo "  ┌─────────────────────────────────────────┐"
@@ -43,15 +61,9 @@ echo -e "${RESET}"
 
 # ── Backup warning ─────────────────────────────────────────────────────────────
 header "Backup Warning"
-warn "Back up your current configs before continuing."
-echo
-echo -e "  Run these commands first if you haven't:"
-echo -e "${BLUE}"
-echo "    mkdir -p ~/dotfiles_backup"
-echo "    cp -r ~/.config ~/dotfiles_backup/"
-echo "    cp -r ~/.local/share/themes ~/dotfiles_backup/"
-echo -e "${RESET}"
-confirm "I have a backup (or don't need one), continue?" || { info "Exiting. Backup first, then re-run."; exit 0; }
+warn "Existing files that would be overwritten are backed up automatically to:"
+info "  $BACKUP_DIR"
+confirm "Continue?" || { info "Exiting."; exit 0; }
 
 # ── Checks ─────────────────────────────────────────────────────────────────────
 header "System Checks"
@@ -103,6 +115,7 @@ warn "Existing files with the same name will be overwritten."
 echo
 
 if confirm "Copy configs to ~/.config/?"; then
+    backup_changed_files "$CONFIG_SRC" "$CONFIG_DEST" "config"
     mkdir -p "$CONFIG_DEST"
     if command -v rsync &>/dev/null; then
         rsync -a --info=progress2 "$CONFIG_SRC/" "$CONFIG_DEST/"
@@ -117,6 +130,7 @@ else
 fi
 
 if [ -d "$THEMES_SRC" ] && confirm "Copy themes to ~/.local/share/themes/?"; then
+    backup_changed_files "$THEMES_SRC" "$THEMES_DEST" "themes"
     mkdir -p "$THEMES_DEST"
     if command -v rsync &>/dev/null; then
         rsync -a --info=progress2 "$THEMES_SRC/" "$THEMES_DEST/"
