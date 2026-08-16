@@ -28,7 +28,7 @@ My riced Hyprland + Arch Linux configuration.
 | `Termsonic` | a TUI for any sonic api music servers|
 | `nvim` | A tui text editor with a lazyvim plugins|
 | `hyprpolkitagent`|a polkit agent for hyprland |
-
+| `slurp, grim, jq`| used for screenshot |
 ### Themes
 
 Themes live in `./themes/` and are applied via the rofi theme-switcher (`Super + w`).
