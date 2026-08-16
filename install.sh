@@ -84,7 +84,7 @@ fi
 # ── Packages ───────────────────────────────────────────────────────────────────
 header "Package Installation"
 
-PACMAN_PKGS=(awww cava kitty waybar rofi dunst hyprland wayland pavucontrol neovim ttf-jetbrains-mono-nerd ttf-font-awesome hyprpolkitagent )
+PACMAN_PKGS=(awww cava kitty waybar rofi dunst hyprland wayland pavucontrol neovim ttf-jetbrains-mono-nerd ttf-font-awesome hyprpolkitagent grim slurp jq)
 AUR_PKGS=(wlogout-git termsonic )
 
 if confirm "Install required packages?"; then

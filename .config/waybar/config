@@ -8,7 +8,7 @@
   "margin-right": 6,
   "modules-left": ["wlr/taskbar", "temperature", "cpu", "memory", "disk", "hyprland/window"],
   "modules-center": [ "hyprland/workspaces"],
-  "modules-right": ["custom/update","pulseaudio", "bluetooth", "network", "clock", "tray", "custom/power"],
+  "modules-right": ["custom/update","pulseaudio", "bluetooth", "network", "battery", "clock", "tray", "custom/power"],
 
   // Left modules
   "wlr/taskbar": {
@@ -104,6 +104,17 @@
     "format-disconnected": "睊 Disconnected",
     "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
     "on-click": "~/.config/waybar/scripts/rofi-wifi-menu.sh"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-icons": ["", "", "", "", ""],
+    "tooltip-format": "{timeTo}, {capacity}%"
   },
   "clock": {
     "format": " {:%I:%M %p}",
